@@ -100,8 +100,8 @@ int f(int i,bool isTightL , bool isTightR){
     if(upper==low) return ((upper==R[i])  + (low == L[i]))+f(i+1,isTightL,isTightR);
      
     else{
-        int ma = f(i+1,isTightL,false)+(low==R[i])  + (low == L[i]);
-        ma = min(ma,f(i+1,false,isTightR)+(upper==R[i])  + (upper == L[i]));
+        int ma = f(i+1,isTightL,false) + (low == L[i]);
+        ma = min(ma,f(i+1,false,isTightR)+(upper==R[i]) );
         return ma;
     }
  
@@ -110,7 +110,6 @@ int f(int i,bool isTightL , bool isTightR){
 void solve(){
     cin>>L>>R;
     
- 
     int ans = f(0,true,true);
     cout<<ans<<endl;
 }
