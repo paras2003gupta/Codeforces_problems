@@ -125,21 +125,18 @@ void solve() {
     // Your logic here
     int a,x,y;
     cin>>a>>x>>y;
-    
-    bool ans = false;
-    for(int i = 1; i<= 100 ; i++){
-        if(i==a){
-            continue;
-        }
-        if((abs(x-i)<abs(x-a))&&abs(i-y)<abs(y-a)){
-            ans = true;
-            break;
-        }
-        
+    if(a>=x&&a<=y){
+        cout<<"NO"<<endl;
+        return;
     }
-    if(ans){cout<<"YES"<<endl;return;}
-    cout<<"NO"<<endl;
-    
+    else if(a<=x&&a>=y){
+        cout<<"NO"<<endl;
+        return;
+    }
+    else{
+        cout<<"YES"<<endl;
+        return;
+    }
     
 }
  
