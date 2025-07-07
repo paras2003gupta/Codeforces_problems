@@ -1,72 +1,144 @@
 #include <bits/stdc++.h>
 using namespace std;
  
+// -------------------- Type Definitions --------------------
 #define int long long
-#define fast_io ios::sync_with_stdio(false); cin.tie(nullptr);
+typedef long long ll;
+typedef long double lld;
+typedef unsigned long long ull;
+typedef pair<int, int> pii;
+typedef pair<ll, ll> pll;
+typedef vector<int> vi;
+typedef vector<ll> vl;
+typedef vector<pii> vpi;
+typedef vector<pll> vpl;
  
+// -------------------- Constants --------------------
+const ll MOD = 1e9 + 7;
+const ll INF = 4e18;
+const lld PI = 3.14159265358979323846;
+const ll template_array_size = 1e6 + 585;
+ 
+// -------------------- Fast IO --------------------
+#define send ios_base::sync_with_stdio(false);
+#define help cin.tie(NULL); cout.tie(NULL);
+ 
+// -------------------- Macros --------------------
+#define f0r(i, n) for (int i = 0; i < (n); ++i)
+#define bhag return
+#define f1r(i, a, b) for (int i = (a); i < (b); ++i)
+#define f0rd(i, n) for (int i = (n); i >= 0; --i)
+#define f1rd(i, a, b) for (int i = (a); i >= (b); --i)
+#define pb push_back
+#define mp make_pair
+#define f first
+#define s second
+#define all(v) v.begin(), v.end()
+#define getunique(v) { sort(all(v)); v.erase(unique(all(v)), v.end()); }
+#define ai(a, n) f0r(i, n) cin >> a[i];
+#define ao(a, n) f0r(i, n) { if (i) cout << " "; cout << a[i]; } cout << '\n';
+ 
+// -------------------- Debugging --------------------
+template<typename A> ostream& operator<<(ostream &cout, vector<A> const &v) {
+    cout << "["; for (int i = 0; i < v.size(); i++) { if (i) cout << ", "; cout << v[i]; } return cout << "]";
+}
+template<typename A, typename B> ostream& operator<<(ostream &cout, pair<A, B> const &p) {
+    return cout << "(" << p.f << ", " << p.s << ")";
+}
+template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p) {
+    cin >> p.first >> p.second; return cin;
+}
+ 
+// -------------------- Random --------------------
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-int get_rand(int l, int r) {
-    return uniform_int_distribution<int>(l, r)(rng);
+ 
+// -------------------- File IO --------------------
+void usaco(string filename) {
+    freopen((filename + ".in").c_str(), "r", stdin);
+    freopen((filename + ".out").c_str(), "w", stdout);
 }
  
-vector<int> compute_prefix_min(const vector<int>& a) {
-    int n = a.size();
-    vector<int> pm(n);
-    pm[0] = a[0];
-    for (int i = 1; i < n; i++) {
-        pm[i] = min(pm[i - 1], a[i]);
+// -------------------- Modular Arithmetic --------------------
+int mod_add(int a, int b, int m) { return ((a % m) + (b % m)) % m; }
+int mod_sub(int a, int b, int m) { return ((a % m) - (b % m) + m) % m; }
+int mod_mul(int a, int b, int m) { return ((a % m) * (b % m)) % m; }
+int mod_expo(int a, int b, int m) {
+    if (b == 0) return 1;
+    int res = mod_expo(a, b / 2, m);
+    res = mod_mul(res, res, m);
+    if (b % 2) res = mod_mul(res, a, m);
+    return res;
+}
+int mod_inverse(int a, int m) { return mod_expo(a, m - 2, m); }
+int mod_div(int a, int b, int m) { return mod_mul(a, mod_inverse(b, m), m); }
+// -------------------- Binary Search Template(Very basic incomplete template) --------------------
+int bs(vi &arr,int target){
+    //for first occurence
+    int i = 0;
+    int j = arr.size()-1;
+    while(i<j){
+        int m = (i+j+1 /*here +1 denotes we didnt loop in infinite loop*/)/2;
+        
+        if(arr[m]<=target) i = m;
+        if(arr[m]>target) j = m-1;
     }
-    return pm;
 }
+bool pred(int m){
  
-vector<int> compute_prefix_sum(const vector<int>& pm) {
-    int n = pm.size();
-    vector<int> ps(n);
-    ps[0] = pm[0];
-    for (int i = 1; i < n; i++) {
-        ps[i] = ps[i - 1] + pm[i];
+}
+int alternative_bs(vi &arr,int target){
+    int l = -1;
+    int r = arr.size();
+    while(r-l>1){
+        int m  = (l+r)/2;
+        pred(m)?l=m:r=m;
     }
-    return ps;
+    // l will be the last true
+    // R will be the first false
+    //GARUNTEED
 }
- 
-int compute_min_sum(const vector<int>& a, const vector<int>& pm, const vector<int>& ps) {
-    int n = a.size();
-    const int INF = 4e18;
-    int ans = ps[n - 1];
-    for (int i = 0; i < n - 1; i++) {
-        int prev_min = i > 0 ? pm[i - 1] : INF;
-        int prev_sum = i > 0 ? ps[i - 1] : 0;
-        int combined = a[i] + a[i + 1];
-        int take = min(prev_min, combined);
-        ans = min(ans, prev_sum + take);
+// -------------------- Misc Utilities --------------------
+void printbin(int n) {
+    f0rd(i, 30) cout << ((n >> i) & 1);
+    cout << '\n';
+}
+vector<bool> sieve(int n) {
+    vector<bool> prime(n, true);
+    prime[0] = prime[1] = false;
+    for (int i = 2; i * i < n; i++) {
+        if (prime[i]) {
+            for (int j = i * i; j < n; j += i) {
+                prime[j] = false;
+            }
+        }
     }
-    return ans;
+    return prime;
 }
+long long get_hash(string s){
+    long long h = 0;
  
+    for(int i = 0;i<s.size() ;i++){
+        h = (h*31+s[i]-'a'+1)%MOD;
+    }
+    return h;
+}
+// -------------------- Solve Function --------------------
 void solve() {
-    int n;
-    cin >> n;
-    vector<int> a(n);
-    for (int i = 0; i < n; i++) cin >> a[i];
+    // Your logic here
+    int n;cin>>n;
+    vi arr(n);
+    ai(arr,n);
  
-    vector<int> pm = compute_prefix_min(a);
-    vector<int> ps = compute_prefix_sum(pm);
-    int result = compute_min_sum(a, pm, ps);
+    int ans = arr[1]+arr[0];
+    ans = min(ans,arr[0]*2);
+    cout<<ans<<endl;
     
-    vector<int> dp(n + 1, -1), random(n), used(n), visited(n, 0);
-    bool random_flag = false, used_flag = true;
- 
-    for (int i = 0; i < n; ++i) {
-        random[i] = get_rand(1, 100);
-    }
- 
-    cout << result << "\n";
 }
  
+// -------------------- Main --------------------
 signed main() {
-    fast_io
-    int T;
-    cin >> T;
-    while (T--) solve();
+    send help
+    int t;cin>>t;
+    while (t--) solve();
     return 0;
 }
